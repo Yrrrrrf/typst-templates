@@ -1,4 +1,4 @@
-// --- File: cover.typ ---
+// cover/example.typ
 // This file defines the function that creates your cover page.
 
 #let cover-page(

@@ -1,4 +1,4 @@
-// --- File: cover-uaemex.typ ---
+// cover/uaemex.typ
 // Define la función para crear tu portada estilo UAEMéx.
 
 #let cover-page(
