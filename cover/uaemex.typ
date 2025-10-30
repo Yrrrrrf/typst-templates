@@ -1,113 +1,119 @@
 // cover/uaemex.typ
-// Define la función para crear tu portada estilo UAEMéx.
+// Versión actualizada y mejorada de la portada.
 
 #let cover-page(
-  // Argumentos requeridos
-  institute_logo,
-  project_name,
-  authors,
+	// --- Parámetros Académicos ---
+	institute_logo: none,
+	institute_name: none,
+	faculty_name: none,
+	faculty_logo: none, // Opcional
 
-  // Argumentos opcionales (puedes borrarlos o dejarlos en `none`)
-  faculty_logo: none,
-  project_subtitle: none,
-  date: none,
-  subject: none,
-  professor: none,
-  group: none
+	// --- Parámetros del Proyecto ---
+	project_name: none,
+	project_type: none, // Opcional
+	date: none, // Opcional
+
+	// --- Datos Generales (Opcionales) ---
+	authors: (),
+	subject: none,
+	professor: none,
+	group: none,
 ) = {
-  // --- Configuración de la Página ---
-  // Una página limpia, sin encabezado, pie de página o numeración.
-  set page(
-    header: none,
-    footer: none,
-    numbering: none,
-    margin: (top: 3cm, bottom: 2.5cm, x: 2.5cm)
-  )
+	// --- Verificación de parámetros obligatorios ---
+	if institute_logo == none { panic("El 'institute_logo' es obligatorio.") }
+	if institute_name == none { panic("El 'institute_name' es obligatorio.") }
+	if faculty_name == none { panic("El 'faculty_name' es obligatorio.") }
+	if project_name == none { panic("El 'project_name' es obligatorio.") }
 
-  // Espaciador vertical flexible para empujar el contenido [cite: 231]
-  v(1fr)
+	// --- Configuración de la página ---
+	set page(
+		header: none,
+		footer: none,
+		numbering: none,
+		margin: (top: 2.5cm, bottom: 2.5cm, x: 2.5cm)
+	)
 
-  // --- Bloque Superior (Logo Instituto y Título) ---
-  align(center)[
-    // Logo principal de la universidad
-    #image(institute_logo, width: 9cm)
+	// --- 1. SECCIÓN ACvADÉMICA (LOGOS Y NOMBRES) ---
+	// Usamos un grid para colocar los logos en las esquinas superiores.
+	grid(
+	columns: (1fr, 1fr),
+	align: center,
 
-    #v(2cm)
+	// Columna Izquierda: Logo y nombre de la Institución
+	stack(
+		spacing: 0.9em, // Espacio entre logo y texto
+		image(institute_logo, height: 4.5cm),
+		text(16pt, weight: "bold")[#institute_name]
+	),
 
-    // Título del Proyecto (en color naranja/rojo de la imagen)
-    #text(size: 20pt, weight: "bold", fill: rgb("#C93312"))[
-      #project_name
-    ]
+	// Columna Derecha: Logo y nombre de la Facultad (si existe)
+	if faculty_logo != none {
+		stack(
+		spacing: 0.9em,
+		image(faculty_logo, height: 4.5cm), // Misma altura para consistencia
+		text(16pt, weight: "bold")[#faculty_name]
+		)
+	},
 
-    // Subtítulo (solo si se proporciona)
-    #if project_subtitle != none {
-      v(0.6cm)
-      text(size: 16pt, style: "italic", fill: gray)[
-        #project_subtitle
-      ]
-    }
-  ]
+	// Si no hay logo de facultad, el nombre va debajo, ocupando ambas columnas
+	if faculty_logo == none {
+		grid.cell(
+		colspan: 2,
+		text(16pt, weight: "bold")[#faculty_name]
+		)
+	}
+	)
 
-  // Espaciador flexible más grande para empujar hacia abajo
-  v(3fr)
 
-// --- Bloque Medio (Metadatos Opcionales y Autores) ---
-  align(center)[
+	// Si no hay logo de facultad, mostramos el nombre centrado debajo.
+	if faculty_logo == none {
+		v(1em)
+		align(center, text(16pt, weight: "bold")[#faculty_name])
+	}
 
-    // Metadatos de la materia (solo aparecen si se proporcionan)
-    #if subject != none or professor != none or group != none {
-      // 1. Primero, construimos un arreglo con los items que SÍ existen
-      let metadata_items = ()
-      if subject != none {
-        metadata_items.push("Materia:")
-        metadata_items.push(text(weight: "bold")[#subject])
-      }
-      if professor != none {
-        metadata_items.push("Profesor:")
-        metadata_items.push(text(weight: "bold")[#professor])
-      }
-      if group != none {
-        metadata_items.push("Grupo:")
-        metadata_items.push(text(weight: "bold")[#group])
-      }
-      
-      // 2. Segundo, pasamos ese arreglo a la grid usando el operador "spread" (..)
-      grid(
-        columns: (auto, 1fr),
-        align: left,
-        column-gutter: 1em,
-        ..metadata_items
-      )
-      v(1.5cm) // Espacio después del bloque de metadatos
-    }
+	v(2fr) // Espaciador flexible
 
-    // Fecha (solo si se proporciona)
-    #if date != none {
-      text(size: 14pt, fill: gray)[
-        #date
-      ]
-      v(10pt)
-    }
+	// --- 2. SECCIÓN DEL PROYECTO ---
+	align(center)[
+		#if project_type != none {
+			text(14pt, fill: gray)[#upper(project_type)]
+			v(1.5em)
+		}
+		#text(22pt, weight: "bold")[#project_name]
+		#if date != none {
+			v(1.2em)
+			text(14pt)[#date]
+		}
+	]
 
-    // Autores (convertidos a mayúsculas y separados por comas)
-    #text(size: 14pt, weight: "bold")[
-      #authors.map(s => upper(s)).join(", ")
-    ]
-  ]
+	v(3fr) // Espaciador flexible más grande
 
-  // Espaciador flexible final
-  v(1fr)
+	// --- 3. SECCIÓN DE DATOS GENERALES ---
+	grid(
+		columns: (1fr, 1fr),
+		align: top,
+		// Columna Izquierda: Datos de la materia
+		stack(
+			spacing: 0.65em,
+			if subject != none {
+				[Materia: #text(weight: "bold")[#subject]]
+			},
+			if professor != none {
+				[Profesor: #text(weight: "bold")[#professor]]
+			},
+			if group != none {
+				[Grupo: #text(weight: "bold")[#group]]
+			},
+		),
+		// Columna Derecha: Autores (en lista vertical)
+		if authors.len() > 0 {
+			stack(
+				spacing: 0.65em,
+				text(weight: "bold")[Autores:],
+				..authors.map(author => [ #author ])
+			)
+		}
+	)
 
-  // --- Bloque Inferior (Logos Secundarios) ---
-  let bottom_logos = ()
-  if faculty_logo != none {
-    bottom_logos.push(image(faculty_logo, width: 6.5cm))
-  }
-
-  grid(
-    columns: (1fr,) * bottom_logos.len(), // Columnas iguales para cada logo [cite: 233]
-    align: center + horizon,
-    gutter: 1cm,
-    ..bottom_logos // "Sprea" el arreglo de logos en la grid [cite: 239]
-  )
-}
+	v(1fr) // Espaciador final
+	}
