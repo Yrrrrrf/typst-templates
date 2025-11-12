@@ -1,119 +1,83 @@
 // cover/uaemex.typ
-// Versión actualizada y mejorada de la portada.
+// Versión actualizada para un diseño centrado y con más detalles académicos.
 
 #let cover-page(
-	// --- Parámetros Académicos ---
-	institute_logo: none,
-	institute_name: none,
-	faculty_name: none,
-	faculty_logo: none, // Opcional
+  // --- Parámetros Académicos ---
+  institute_logo: none,
+  institute_name: none,
+  faculty_name: none,
+  faculty_logo: none,
 
-	// --- Parámetros del Proyecto ---
-	project_name: none,
-	project_type: none, // Opcional
-	date: none, // Opcional
-
-	// --- Datos Generales (Opcionales) ---
-	authors: (),
-	subject: none,
-	professor: none,
-	group: none,
+  // --- Parámetros del Proyecto ---
+  project_name: none,
+  
+  // --- Datos Generales (Opcionales) ---
+  authors: (),
+  subject: none,
+  professor: none,
+  group: none,
+  semester: none,
 ) = {
-	// --- Verificación de parámetros obligatorios ---
-	if institute_logo == none { panic("El 'institute_logo' es obligatorio.") }
-	if institute_name == none { panic("El 'institute_name' es obligatorio.") }
-	if faculty_name == none { panic("El 'faculty_name' es obligatorio.") }
-	if project_name == none { panic("El 'project_name' es obligatorio.") }
+  // --- Verificación de parámetros obligatorios ---
+  if institute_logo == none { panic("El 'institute_logo' es obligatorio.") }
+  if institute_name == none { panic("El 'institute_name' es obligatorio.") }
+  if faculty_name == none { panic("El 'faculty_name' es obligatorio.") }
+  if faculty_logo == none { panic("El 'faculty_logo' es obligatorio.") }
+  if project_name == none { panic("El 'project_name' es obligatorio.") }
 
-	// --- Configuración de la página ---
-	set page(
-		header: none,
-		footer: none,
-		numbering: none,
-		margin: (top: 2.5cm, bottom: 2.5cm, x: 2.5cm)
-	)
+  // --- Configuración de la página ---
+  set page(
+    header: none,
+    footer: none,
+    numbering: none,
+    margin: (top: 2.5cm, bottom: 2.5cm, x: 2.5cm)
+  )
+  // set text(font: "Linux Libertine", lang: "es")
 
-	// --- 1. SECCIÓN ACvADÉMICA (LOGOS Y NOMBRES) ---
-	// Usamos un grid para colocar los logos en las esquinas superiores.
-	grid(
-	columns: (1fr, 1fr),
-	align: center,
+  // --- 1. SECCIÓN DE LOGOS Y NOMBRES ---
+  grid(
+    columns: (1fr, 2fr, 1fr),
+    align: center + horizon,
 
-	// Columna Izquierda: Logo y nombre de la Institución
-	stack(
-		spacing: 0.9em, // Espacio entre logo y texto
-		image(institute_logo, height: 4.5cm),
-		text(16pt, weight: "bold")[#institute_name]
-	),
+		// Left
+    image(institute_logo, height: 3cm),
+		// Middle
+    stack(
+      spacing: 0.8em,
+      text(16pt, weight: "bold")[#institute_name],
+      text(14pt)[#faculty_name]
+    ),
+		// Right
+    image(faculty_logo, height: 3cm),
+  )
 
-	// Columna Derecha: Logo y nombre de la Facultad (si existe)
-	if faculty_logo != none {
-		stack(
-		spacing: 0.9em,
-		image(faculty_logo, height: 4.5cm), // Misma altura para consistencia
-		text(16pt, weight: "bold")[#faculty_name]
-		)
-	},
+  v(1fr) // Espaciador flexible
 
-	// Si no hay logo de facultad, el nombre va debajo, ocupando ambas columnas
-	if faculty_logo == none {
-		grid.cell(
-		colspan: 2,
-		text(16pt, weight: "bold")[#faculty_name]
-		)
-	}
-	)
+  // --- 2. SECCIÓN DE DATOS ACADÉMICOS ---
+  align(center, stack(
+    spacing: 1.6em,
+    if semester != none { text(12pt)[Semestre: #semester] },
+    if subject != none { text(12pt)[#subject] },
+    if professor != none { text(12pt)[Profesor: #professor] },
+    if group != none { text(12pt)[Grupo: #group] },
+  ))
 
+  v(1fr) // Espaciador flexible
 
-	// Si no hay logo de facultad, mostramos el nombre centrado debajo.
-	if faculty_logo == none {
-		v(1em)
-		align(center, text(16pt, weight: "bold")[#faculty_name])
-	}
+  // --- 3. SECCIÓN DE AUTORES ---
+  if authors.len() > 0 {
+    align(center, stack(
+      spacing: 0.65em,
+      ..authors.map(author => text(12pt, weight: "bold")[#author])
+    ))
+  }
 
-	v(2fr) // Espaciador flexible
+  v(1fr) // Espaciador flexible más grande
 
-	// --- 2. SECCIÓN DEL PROYECTO ---
-	align(center)[
-		#if project_type != none {
-			text(14pt, fill: gray)[#upper(project_type)]
-			v(1.5em)
-		}
-		#text(22pt, weight: "bold")[#project_name]
-		#if date != none {
-			v(1.2em)
-			text(14pt)[#date]
-		}
-	]
+  // --- 4. SECCIÓN DEL PROYECTO ---
+  align(center)[
+    #text(18pt, weight: "bold")[“#project_name”]
+  ]
 
-	v(3fr) // Espaciador flexible más grande
-
-	// --- 3. SECCIÓN DE DATOS GENERALES ---
-	grid(
-		columns: (1fr, 1fr),
-		align: top,
-		// Columna Izquierda: Datos de la materia
-		stack(
-			spacing: 0.65em,
-			if subject != none {
-				[Materia: #text(weight: "bold")[#subject]]
-			},
-			if professor != none {
-				[Profesor: #text(weight: "bold")[#professor]]
-			},
-			if group != none {
-				[Grupo: #text(weight: "bold")[#group]]
-			},
-		),
-		// Columna Derecha: Autores (en lista vertical)
-		if authors.len() > 0 {
-			stack(
-				spacing: 0.65em,
-				text(weight: "bold")[Autores:],
-				..authors.map(author => [ #author ])
-			)
-		}
-	)
-
-	v(1fr) // Espaciador final
-	}
+  v(3fr) // Espaciador final
+}
