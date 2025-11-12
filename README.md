@@ -5,7 +5,7 @@
 
 <div align="center">
 
-[![GitHub: Repo](https://img.shields.io/badge/typst--templates-58A6FF?&logo=github)](https://github.com/Yrrrrrf/typst)
+[![GitHub: Repo](https://img.shields.io/badge/typst--templates-58A6FF?&logo=github)](https://github.com/Yrrrrrf/typst-templates)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](./LICENSE)
 
 </div>
