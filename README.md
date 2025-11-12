@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://typst.app/favicon-128.png" alt="Typst Logo" width="128" height="128">
+  <img src="https://avatars.githubusercontent.com/u/67595261" alt="Typst Logo" width="128" height="128">
   <div align="center">Typst Templates Collection</div>
 </h1>
 

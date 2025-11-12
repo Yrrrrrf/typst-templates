@@ -1,0 +1,8 @@
+# all that start with a dot except .gitignore
+.*
+!.gitignore
+
+# Typst-generated files
+**.pdf
+
+**.code-workspace
