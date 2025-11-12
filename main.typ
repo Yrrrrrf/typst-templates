@@ -1,39 +1,31 @@
 // main.typ
-// Este es el archivo principal que debes compilar.
+// Ejemplo de uso del script de portada mejorada.
 
-#import "../cover/uaemex.typ": cover-page
+#import "cover/uaemex.typ": cover-page
 
 #cover-page(
-  // Institución
-  "../assets/img/uaeméx.png",
-  // Nombre del proyecto
-  "Proyecto de Ejemplo en Typst",
-  // Autores (como una lista)
-  (
+  // --- Parámetros Académicos (Obligatorios) ---
+  institute_logo: "../assets/img/uaeméx.png",
+  institute_name: "Universidad Autónoma del Estado de México",
+  faculty_logo: "../assets/img/fi.png",
+  faculty_name: "Facultad de Ingeniería",
+  
+  // --- Parámetros del Proyecto (Obligatorio) ---
+  project_name: "Aplicación de Marcos de Referencia en Seguridad de la Información",
+
+  // --- Datos Generales (Opcionales) ---
+  semester: "agosto-diciembre (2025B)",
+  subject: "Seguridad de la información",
+  professor: "Juan Carlos Escobar Gonzales",
+  group: "O2",
+  authors: (
     "Fernando Bryan Reza Campos",
-    "Yusepe"
   ),
-
-  faculty_logo: "../assets/img/fi-uaeméx.jpg",
-  project_subtitle: "Un subtítulo genial para el proyecto",
-  date: "Octubre 2025",
-  subject: "Nombre de la Materia",
-  professor: "Prof. Que Revisa Tareas",
-  group: "G01"
 )
 
-// Reiniciamos la numeración de página y configuramos el encabezado/pie
-#set page(
-  numbering: "1",
-  // header: context align(center)[Mi Reporte Escolar],
-  // footer: context align(center)[Página #counter(page).display()]
-)
-#counter(page).update(1) // Empezar a contar desde 1
+// --- Comienzo del documento ---
+#set page(numbering: "1")
+#counter(page).update(1)
 
-= Introducción
-
-#lorem(64)
-
-= Capítulo 1
-
-#lorem(128)
+= Resumen
+Este documento es un ejemplo que utiliza la nueva portada mejorada.
